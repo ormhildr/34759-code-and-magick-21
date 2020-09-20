@@ -108,7 +108,7 @@ window.renderStatistics = (ctx, names, times) => {
         (CLOUD_HEIGHT - FONT_HEIGHT)
     );
 
-    ctx.fillStyle = names[i] === `Вы` ? MAIN_PLAYER_COLOR : `hsl(240, 100%, ${getRandomNumber(0, 100)}%)`;
+    ctx.fillStyle = names[i] === `Вы` ? MAIN_PLAYER_COLOR : `hsl(240, ${getRandomNumber(0, 100)}%, 50%)`;
 
     ctx.fillRect(
         CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i,
