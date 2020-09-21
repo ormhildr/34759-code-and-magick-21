@@ -24,13 +24,25 @@ const Gap = {
 };
 const {CLOUD_GAP, BAR_GAP} = Gap;
 
+
 const Colors = {
-  FONT_COLOR: `#000`,
-  CLOUD_COLOR: `#fff`,
-  CLOUD_SHADOW: `rgba(0, 0, 0, 0.7)`,
-  MAIN_PLAYER_COLOR: `rgba(255, 0, 0, 1)`,
+  fontColor: () => {
+    return `#000`;
+  },
+  cloudColor: () => {
+    return `#fff`;
+  },
+  cloudShadow: () => {
+    return `rgba(0, 0, 0, 0.7)`;
+  },
+  mainPlayerColor: () => {
+    return `rgba(255, 0, 0, 1)`;
+  },
+  playersColor: () => {
+    return `hsl(240, ${getRandomNumber(0, 100)}%, 50%)`;
+  }
 };
-const {FONT_COLOR, CLOUD_COLOR, CLOUD_SHADOW, MAIN_PLAYER_COLOR} = Colors;
+const {fontColor, cloudColor, cloudShadow, mainPlayerColor, playersColor} = Colors;
 
 const Font = {
   FONT_SIZE: `16px`,
@@ -74,16 +86,16 @@ window.renderStatistics = (ctx, names, times) => {
   renderCloud(
       ctx,
       CLOUD_X + CLOUD_GAP,
-      CLOUD_Y + CLOUD_GAP, CLOUD_SHADOW
+      CLOUD_Y + CLOUD_GAP, cloudShadow()
   );
   renderCloud(
       ctx,
       CLOUD_X,
       CLOUD_Y,
-      CLOUD_COLOR
+      cloudColor()
   );
 
-  ctx.fillStyle = FONT_COLOR;
+  ctx.fillStyle = fontColor();
   ctx.font = `${FONT_SIZE} ${FONT_FAMILY}`;
   ctx.textBaseline = `hanging`;
 
@@ -94,13 +106,7 @@ window.renderStatistics = (ctx, names, times) => {
   const maxTime = getMaxElement(times);
 
   for (let i = 0; i < names.length; i++) {
-    ctx.fillStyle = FONT_COLOR;
-
-    ctx.fillText(
-        Math.round(times[i]),
-        CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i,
-        -((BAR_HEIGHT * times[i]) / maxTime) + (BAR_GAP + BAR_HEIGHT + CLOUD_Y + CLOUD_GAP)
-    );
+    ctx.fillStyle = fontColor();
 
     ctx.fillText(
         names[i],
@@ -108,7 +114,7 @@ window.renderStatistics = (ctx, names, times) => {
         (CLOUD_HEIGHT - FONT_HEIGHT)
     );
 
-    ctx.fillStyle = names[i] === `Вы` ? MAIN_PLAYER_COLOR : `hsl(240, ${getRandomNumber(0, 100)}%, 50%)`;
+    ctx.fillStyle = names[i] === `Вы` ? mainPlayerColor() : playersColor();
 
     ctx.fillRect(
         CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i,
