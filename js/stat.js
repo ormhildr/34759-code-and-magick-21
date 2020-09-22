@@ -4,64 +4,48 @@ const CloudSize = {
   CLOUD_WIDTH: 420,
   CLOUD_HEIGHT: 270
 };
-const {CLOUD_WIDTH, CLOUD_HEIGHT} = CloudSize;
 
 const CloudCoordinate = {
   CLOUD_X: 100,
   CLOUD_Y: 10
 };
-const {CLOUD_X, CLOUD_Y} = CloudCoordinate;
 
 const BarSize = {
   BAR_WIDTH: 40,
   BAR_HEIGHT: 150
 };
-const {BAR_WIDTH, BAR_HEIGHT} = BarSize;
 
 const Gap = {
   CLOUD_GAP: 10,
   BAR_GAP: 50
 };
-const {CLOUD_GAP, BAR_GAP} = Gap;
-
 
 const Colors = {
-  fontColor: () => {
-    return `#000`;
-  },
-  cloudColor: () => {
-    return `#fff`;
-  },
-  cloudShadow: () => {
-    return `rgba(0, 0, 0, 0.7)`;
-  },
-  mainPlayerColor: () => {
-    return `rgba(255, 0, 0, 1)`;
-  },
-  playersColor: () => {
-    return `hsl(240, ${getRandomNumber(0, 100)}%, 50%)`;
-  }
+  FONT_COLOR: `#000`,
+  CLOUD_COLOR: `#fff`,
+  CLOUD_SHADOW: `rgba(0, 0, 0, 0.7)`,
+  MAIN_PLAYER_COLOR: `rgba(255, 0, 0, 1)`
 };
-const {fontColor, cloudColor, cloudShadow, mainPlayerColor, playersColor} = Colors;
 
 const Font = {
   FONT_SIZE: `16px`,
   FONT_FAMILY: `PT Mono`,
   FONT_HEIGHT: 20
 };
-const {FONT_SIZE, FONT_FAMILY, FONT_HEIGHT} = Font;
+
+const TITLE_ARRAY = [`Ура вы победили!`, `Список результатов:`];
 
 const renderCloud = (ctx, x, y, color) => {
   ctx.fillStyle = color;
-  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
+  ctx.fillRect(x, y, CloudSize.CLOUD_WIDTH, CloudSize.CLOUD_HEIGHT);
 };
 
-const renderTitle = (array, ctx) => {
-  for (let i = 0; i < array.length; i++) {
+const renderTitle = (titles, ctx) => {
+  for (let i = 0; i < titles.length; i++) {
     ctx.fillText(
-        array[i],
-        CLOUD_X + FONT_HEIGHT,
-        CLOUD_Y + FONT_HEIGHT * (i + 1)
+        titles[i],
+        CloudCoordinate.CLOUD_X + Font.FONT_HEIGHT,
+        CloudCoordinate.CLOUD_Y + Font.FONT_HEIGHT * (i + 1)
     );
   }
 };
@@ -77,50 +61,52 @@ const getMaxElement = (arr) => {
   return maxElement;
 };
 
-const getRandomNumber = (min, max) => {
-  let random = Math.floor(min + Math.random() * (max + 1 - min));
+const getRandomNumber = (min = 0, max = 100) => {
+  const random = Math.floor(min + Math.random() * (max + 1 - min));
   return random;
+};
+
+const getRandomColor = () => {
+  return `hsl(240, ${getRandomNumber(0, 100)}%, 50%)`;
 };
 
 window.renderStatistics = (ctx, names, times) => {
   renderCloud(
       ctx,
-      CLOUD_X + CLOUD_GAP,
-      CLOUD_Y + CLOUD_GAP, cloudShadow()
+      CloudCoordinate.CLOUD_X + Gap.CLOUD_GAP,
+      CloudCoordinate.CLOUD_Y + Gap.CLOUD_GAP, Colors.CLOUD_SHADOW
   );
   renderCloud(
       ctx,
-      CLOUD_X,
-      CLOUD_Y,
-      cloudColor()
+      CloudCoordinate.CLOUD_X,
+      CloudCoordinate.CLOUD_Y,
+      Colors.CLOUD_COLOR
   );
 
-  ctx.fillStyle = fontColor();
-  ctx.font = `${FONT_SIZE} ${FONT_FAMILY}`;
+  ctx.fillStyle = Colors.FONT_COLOR;
+  ctx.font = `${Font.FONT_SIZE} ${Font.FONT_FAMILY}`;
   ctx.textBaseline = `hanging`;
 
-  let titleArray = [`Ура вы победили!`, `Список результатов:`];
-
-  renderTitle(titleArray, ctx);
+  renderTitle(TITLE_ARRAY, ctx);
 
   const maxTime = getMaxElement(times);
 
   for (let i = 0; i < names.length; i++) {
-    ctx.fillStyle = fontColor();
+    ctx.fillStyle = Colors.FONT_COLOR;
 
     ctx.fillText(
         names[i],
-        CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i,
-        (CLOUD_HEIGHT - FONT_HEIGHT)
+        CloudCoordinate.CLOUD_X + Gap.BAR_GAP + (Gap.BAR_GAP + BarSize.BAR_WIDTH) * i,
+        (CloudSize.CLOUD_HEIGHT - Font.FONT_HEIGHT)
     );
 
-    ctx.fillStyle = names[i] === `Вы` ? mainPlayerColor() : playersColor();
+    ctx.fillStyle = names[i] === `Вы` ? Colors.MAIN_PLAYER_COLOR : getRandomColor();
 
     ctx.fillRect(
-        CLOUD_X + BAR_GAP + (BAR_GAP + BAR_WIDTH) * i,
-        BAR_GAP + BAR_HEIGHT + CLOUD_Y * 4,
-        BAR_WIDTH,
-        -(BAR_HEIGHT * times[i]) / maxTime
+        CloudCoordinate.CLOUD_X + Gap.BAR_GAP + (Gap.BAR_GAP + BarSize.BAR_WIDTH) * i,
+        Gap.BAR_GAP + BarSize.BAR_HEIGHT + CloudCoordinate.CLOUD_Y * 4,
+        BarSize.BAR_WIDTH,
+        -(BarSize.BAR_HEIGHT * times[i]) / maxTime
     );
   }
 };
