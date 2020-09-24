@@ -39,31 +39,33 @@ const EYES_COLORS = [
   `green`
 ];
 
-const getRandomValue = (array, min = 0, max = array.length - 1) => {
-  const random = Math.floor(min + Math.random() * (max + 1 - min));
-  return random;
-};
-
-const getNewObject = () => {
-  return {
-    name: `${NAMES[getRandomValue(NAMES)]} ${SURNAMES[getRandomValue(SURNAMES)]}`,
-    coatColor: COAT_COLORS[getRandomValue(COAT_COLORS)],
-    eyesColor: EYES_COLORS[getRandomValue(EYES_COLORS)]
-  };
-};
-
-const wizards = [];
-for (let i = 0; i < 4; i++) {
-  wizards.push(getNewObject());
-}
+const WIZARDS_AMOUNT = 4;
 
 const userDialog = document.querySelector(`.setup`);
-userDialog.classList.remove(`hidden`);
+
+const similarListElement = userDialog.querySelector(`.setup-similar-list`);
 
 const similarWizardTemplate = document.querySelector(`#similar-wizard-template`)
 .content.querySelector(`.setup-similar-item`);
 
-const similarListElement = userDialog.querySelector(`.setup-similar-list`);
+const getRandom = (min = 0, max = 100) => {
+  const random = Math.floor(min + Math.random() * (max + 1 - min));
+  return random;
+};
+
+const generateWizard = () => ({
+  name: `${NAMES[getRandom(0, NAMES.length - 1)]} ${SURNAMES[getRandom(0, SURNAMES.length - 1)]}`,
+  coatColor: COAT_COLORS[getRandom(0, COAT_COLORS.length - 1)],
+  eyesColor: EYES_COLORS[getRandom(0, EYES_COLORS.length - 1)]
+});
+
+const getWizards = () => {
+  const wizards = [];
+  for (let i = 0; i < WIZARDS_AMOUNT; i++) {
+    wizards.push(generateWizard());
+  }
+  return wizards;
+};
 
 const renderWizard = (wizard) => {
   const wizardElement = similarWizardTemplate.cloneNode(true);
@@ -75,15 +77,16 @@ const renderWizard = (wizard) => {
   return wizardElement;
 };
 
-const getFillList = (array) => {
+const getFillList = (wizards) => {
   const fragment = document.createDocumentFragment();
 
-  for (let i = 0; i < array.length; i++) {
-    fragment.appendChild(renderWizard(array[i]));
+  for (let i = 0; i < wizards.length; i++) {
+    fragment.appendChild(renderWizard(wizards[i]));
   }
-  similarListElement.appendChild(fragment);
+  return fragment;
 };
 
-getFillList(wizards);
+similarListElement.appendChild(getFillList(getWizards()));
 
+userDialog.classList.remove(`hidden`);
 userDialog.querySelector(`.setup-similar`).classList.remove(`hidden`);
