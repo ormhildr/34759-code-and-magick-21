@@ -49,8 +49,7 @@ const similarWizardTemplate = document.querySelector(`#similar-wizard-template`)
 .content.querySelector(`.setup-similar-item`);
 
 const getRandom = (min = 0, max = 100) => {
-  const random = Math.floor(min + Math.random() * (max + 1 - min));
-  return random;
+  return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
 const generateWizard = () => ({
@@ -77,7 +76,7 @@ const renderWizard = (wizard) => {
   return wizardElement;
 };
 
-const getFillList = (wizards) => {
+const renderWizards = (wizards) => {
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < wizards.length; i++) {
@@ -86,7 +85,7 @@ const getFillList = (wizards) => {
   return fragment;
 };
 
-similarListElement.appendChild(getFillList(getWizards()));
+similarListElement.appendChild(renderWizards(getWizards()));
 
 userDialog.classList.remove(`hidden`);
 userDialog.querySelector(`.setup-similar`).classList.remove(`hidden`);
