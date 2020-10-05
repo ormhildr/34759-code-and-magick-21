@@ -50,26 +50,6 @@ const renderTitle = (titles, ctx) => {
   }
 };
 
-const getMaxElement = (arr) => {
-  let maxElement = arr[0];
-
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] > maxElement) {
-      maxElement = arr[i];
-    }
-  }
-  return maxElement;
-};
-
-const getRandomNumber = (min = 0, max = 100) => {
-  const random = Math.floor(min + Math.random() * (max + 1 - min));
-  return random;
-};
-
-const getRandomColor = () => {
-  return `hsl(240, ${getRandomNumber(0, 100)}%, 50%)`;
-};
-
 window.renderStatistics = (ctx, names, times) => {
   renderCloud(
       ctx,
@@ -89,7 +69,7 @@ window.renderStatistics = (ctx, names, times) => {
 
   renderTitle(TITLE_ARRAY, ctx);
 
-  const maxTime = getMaxElement(times);
+  const maxTime = window.util.getMaxElement(times);
 
   for (let i = 0; i < names.length; i++) {
     ctx.fillStyle = Colors.FONT_COLOR;
@@ -100,7 +80,7 @@ window.renderStatistics = (ctx, names, times) => {
         (CloudSize.CLOUD_HEIGHT - Font.FONT_HEIGHT)
     );
 
-    ctx.fillStyle = names[i] === `Вы` ? Colors.MAIN_PLAYER_COLOR : getRandomColor();
+    ctx.fillStyle = names[i] === `Вы` ? Colors.MAIN_PLAYER_COLOR : window.util.getRandomHSL();
 
     ctx.fillRect(
         CloudCoordinate.CLOUD_X + Gap.BAR_GAP + (Gap.BAR_GAP + BarSize.BAR_WIDTH) * i,
