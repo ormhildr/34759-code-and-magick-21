@@ -8,8 +8,8 @@
   const dialogHandle = userDialog.querySelector(`.upload`);
 
   const defaultCoord = {
-    top: `80px`,
-    left: `50%`
+    top: userDialog.style.top,
+    left: userDialog.style.left
   };
 
   const onPopupEscPress = (evt) => {
