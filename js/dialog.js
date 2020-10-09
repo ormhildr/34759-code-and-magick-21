@@ -6,6 +6,7 @@
   const setupClose = document.querySelector(`.setup-close`);
   const setupUserName = document.querySelector(`.setup-user-name`);
   const dialogHandle = userDialog.querySelector(`.upload`);
+  const form = userDialog.querySelector(`.setup-wizard-form`);
 
   const defaultCoord = {
     top: userDialog.style.top,
@@ -50,6 +51,13 @@
 
   setupUserName.addEventListener(`blur`, () => {
     document.addEventListener(`keydown`, onPopupEscPress);
+  });
+
+  form.addEventListener(`submit`, (evt) => {
+    window.backend.save(new FormData(form), () => {
+      userDialog.classList.add(`hidden`);
+    });
+    evt.preventDefault();
   });
 
   window.dialog = {
