@@ -29,17 +29,6 @@
   window.colors = {
     COAT_COLORS,
     EYES_COLORS,
-    FIREBALL_COLORS,
-    colorize: (element, type, input) => {
-      element.addEventListener(`click`, ()=> {
-        const color = window.util.getRandomFrom(type);
-        input.value = color;
-        if (element.tagName.toLowerCase() === `div`) {
-          element.style.backgroundColor = color;
-        } else {
-          element.style.fill = color;
-        }
-      });
-    }
+    FIREBALL_COLORS
   };
 })();

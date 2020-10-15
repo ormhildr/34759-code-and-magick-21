@@ -12,15 +12,36 @@
 
   const wizardCoat = setupWizard.querySelector(`.wizard-coat`);
 
-  const inputCoat = window.dialog.userDialog.querySelector(`input[name=coat-color]`);
-
   const wizardEyes = setupWizard.querySelector(`.wizard-eyes`);
-
-  const inputEyes = window.dialog.userDialog.querySelector(`input[name=eyes-color]`);
 
   const fireball = window.dialog.userDialog.querySelector(`.setup-fireball-wrap`);
 
-  const inputFireball = window.dialog.userDialog.querySelector(`input[name=fireball-color]`);
+  let wizards = [];
+  let coatColor = `rgb(101, 137, 164)`;
+  let eyesColor = `black`;
+
+  const getRank = (wizard) => {
+    let rank = 0;
+
+    if (wizard.colorCoat === coatColor) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === eyesColor) {
+      rank += 1;
+    }
+
+    return rank;
+  };
+
+  const namesComparator = (left, right) => {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
 
   const renderWizard = (wizard) => {
     const wizardElement = similarWizardTemplate.cloneNode(true);
@@ -32,16 +53,37 @@
     return wizardElement;
   };
 
-  const successHandler = (wizards) => {
+  const renderWizards = (arr) => {
     const fragment = document.createDocumentFragment();
 
-    for (let i = 0; i < MAX_SIMILAR_WIZARD_COUNT; i++) {
-      fragment.appendChild(renderWizard(wizards[i]));
+    const takeNumber = arr.length > MAX_SIMILAR_WIZARD_COUNT
+      ? MAX_SIMILAR_WIZARD_COUNT
+      : wizards.length;
+
+    similarListElement.innerHTML = ``;
+
+    for (let i = 0; i < takeNumber; i++) {
+      fragment.appendChild(renderWizard(arr[i]));
     }
 
     similarListElement.appendChild(fragment);
 
     window.dialog.userDialog.querySelector(`.setup-similar`).classList.remove(`hidden`);
+  };
+
+  const updateWizards = () => {
+    renderWizards(wizards.sort((left, right) => {
+      let rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
+  };
+
+  const successHandler = (data) => {
+    wizards = data;
+    updateWizards();
   };
 
   const errorHandler = function (errorMessage) {
@@ -58,7 +100,22 @@
 
   window.backend.load(successHandler, errorHandler);
 
-  window.colors.colorize(wizardCoat, window.colors.COAT_COLORS, inputCoat);
-  window.colors.colorize(wizardEyes, window.colors.EYES_COLORS, inputEyes);
-  window.colors.colorize(fireball, window.colors.FIREBALL_COLORS, inputFireball);
+  wizardCoat.addEventListener(`click`, () => {
+    const color = window.util.getRandomFrom(window.colors.COAT_COLORS);
+    wizardCoat.style.fill = color;
+    coatColor = color;
+    window.debounce(updateWizards);
+  });
+
+  wizardEyes.addEventListener(`click`, () => {
+    const color = window.util.getRandomFrom(window.colors.EYES_COLORS);
+    wizardEyes.style.fill = color;
+    eyesColor = color;
+    window.debounce(updateWizards);
+  });
+
+  fireball.addEventListener(`click`, () => {
+    const color = window.util.getRandomFrom(window.colors.FIREBALL_COLORS);
+    fireball.style.backgroundColor = color;
+  });
 })();
