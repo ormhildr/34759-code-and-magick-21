@@ -71,7 +71,7 @@
     window.dialog.userDialog.querySelector(`.setup-similar`).classList.remove(`hidden`);
   };
 
-  const updateWizards = () => {
+  const updateWizards = window.debounce(() => {
     renderWizards(wizards.sort((left, right) => {
       let rankDiff = getRank(right) - getRank(left);
       if (rankDiff === 0) {
@@ -79,7 +79,7 @@
       }
       return rankDiff;
     }));
-  };
+  });
 
   const successHandler = (data) => {
     wizards = data;
@@ -104,14 +104,14 @@
     const color = window.util.getRandomFrom(window.colors.COAT_COLORS);
     wizardCoat.style.fill = color;
     coatColor = color;
-    window.debounce(updateWizards);
+    updateWizards();
   });
 
   wizardEyes.addEventListener(`click`, () => {
     const color = window.util.getRandomFrom(window.colors.EYES_COLORS);
     wizardEyes.style.fill = color;
     eyesColor = color;
-    window.debounce(updateWizards);
+    updateWizards();
   });
 
   fireball.addEventListener(`click`, () => {

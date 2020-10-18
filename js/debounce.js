@@ -7,12 +7,11 @@
     let lastTimeout = null;
 
     return function () {
-      const parameters = arguments;
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
       lastTimeout = window.setTimeout(function () {
-        cb.apply(null, parameters);
+        cb();
       }, DEBOUNCE_INTERVAL);
     };
   };
